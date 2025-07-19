@@ -179,12 +179,12 @@ export const useAuthStore = defineStore('auth', {
 
       const roleRoutes = {
         admin: '/admin/dashboard',
-        operator: '/operator/dashboard',
-        guru: '/attendance',
-        murid: '/attendance',
+        operator: '/operator',
+        guru: '/class',
+        murid: '/class',
       };
 
-      return roleRoutes[this.user.role] || '/attendance';
+      return roleRoutes[this.user.role] || '/class';
     },
 
     isStudentProfileComplete() {

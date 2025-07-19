@@ -3,14 +3,6 @@
     <div class="sticky top-0">
       <div class="flex justify-between items-center">
         <h1 class="text-xl font-semibold">Kelas</h1>
-        <div v-if="auth.user.role === 'murid'">
-          <RouterLink
-            to="/class/create"
-            class="text-sm text-white font-medium rounded-lg bg-cyan-400 p-2 cursor-pointer hover:bg-cyan-500"
-          >
-            Buat Kelas
-          </RouterLink>
-        </div>
       </div>
     </div>
 
@@ -44,7 +36,7 @@
       </div>
       <div v-else-if="classes.length" class="grid grid-cols-1 gap-4">
         <RouterLink
-          :to="`/class/${item.id}`"
+          :to="`/operator/class/${item.id}`"
           v-for="item in classes"
           :key="item.id"
           custom
@@ -169,7 +161,7 @@ const formatSchedule = (schedules) =>
 
 const loadClasses = async () => {
   try {
-    const response = await axios.get('/class');
+    const response = await axios.get('/class/all');
     classes.value = response.data.data;
   } catch (error) {
     showToast('Gagal memuat data kelas', 'error');
