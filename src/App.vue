@@ -14,21 +14,22 @@
 </template>
 
 <script setup>
-import { ref, computed, provide } from "vue";
-import { useRoute, useRouter, RouterView } from "vue-router";
+import { ref, computed, provide } from 'vue';
+import { useRoute, RouterView } from 'vue-router';
 
-import Toast from "./components/Toast.vue";
+import Toast from './components/Toast.vue';
 
-import AuthLayout from "./layouts/AuthLayout.vue";
+import AuthLayout from './layouts/AuthLayout.vue';
+import UserLayout from './layouts/UserLayout.vue';
 
 // Refs & Router
 const toast = ref(null);
 const route = useRoute();
-const router = useRouter();
 
 // Layout Map
 const layoutMap = {
   auth: AuthLayout,
+  user: UserLayout,
 };
 
 // Compute Current Layout Component
@@ -41,10 +42,5 @@ const currentLayoutComponent = computed(() => {
 const showToast = (message, type, duration) => {
   toast.value?.show(message, type, duration);
 };
-provide("showToast", showToast);
-
-// Retry function
-const handleRetry = () => {
-  router.go(0);
-};
+provide('showToast', showToast);
 </script>
