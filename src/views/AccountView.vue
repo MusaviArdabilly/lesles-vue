@@ -102,21 +102,24 @@
       </div>
 
       <!-- Logout Section -->
-      <div class="flex justify-end gap-4 pt-3 border-t border-gray-200">
-        <button
-          @click="logout()"
-          class="text-sm font-medium rounded-lg border px-3 py-2 transition-colors hover:bg-red-100 text-red-500"
-        >
-          Logout
-        </button>
-        <button
-          v-if="hasChanged"
-          @click="updateUser"
-          :disabled="isLoading"
-          class="text-sm font-medium rounded-lg border px-3 py-2 transition-colors hover:bg-cyan-100 disabled:opacity-50"
-        >
-          <span>Simpan</span>
-        </button>
+      <div class="flex justify-between items-end pt-3 border-t border-gray-200">
+        <p class="text-xs text-gray-500">v{{ version }}</p>
+        <div class="gap-4">
+          <button
+            @click="logout()"
+            class="text-sm font-medium rounded-lg border px-3 py-2 transition-colors hover:bg-red-100 text-red-500"
+          >
+            Logout
+          </button>
+          <button
+            v-if="hasChanged"
+            @click="updateUser"
+            :disabled="isLoading"
+            class="text-sm font-medium rounded-lg border px-3 py-2 transition-colors hover:bg-cyan-100 disabled:opacity-50"
+          >
+            <span>Simpan</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -129,6 +132,7 @@ import { authService } from '@/services/authService';
 import axios from '@/lib/axios';
 import { useRouter } from 'vue-router';
 
+const version = import.meta.env.VITE_APP_VERSION;
 const auth = useAuthStore();
 const showToast = inject('showToast');
 const router = useRouter();
