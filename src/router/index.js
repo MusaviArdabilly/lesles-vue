@@ -7,6 +7,11 @@ import VerifyEmailView from '@/views/auth/VerifyEmailView.vue';
 import AttendanceView from '@/views/AttendanceView.vue';
 import CompleteStudentProfileView from '@/views/auth/CompleteStudentProfileView.vue';
 import CompleteTeacherProfileView from '@/views/auth/CompleteTeacherProfileView.vue';
+import ClassView from '@/views/class/ClassView.vue';
+import ProfileView from '@/views/AccountView.vue';
+import ClassListView from '@/views/class/ClassListView.vue';
+import ClassCreationView from '@/views/class/ClassCreationView.vue';
+import ClassDetailView from '@/views/class/ClassDetailView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,6 +65,33 @@ const router = createRouter({
           path: 'attendance',
           name: 'attendance',
           component: AttendanceView,
+        },
+        {
+          path: 'class',
+          name: 'class',
+          component: ClassView,
+          children: [
+            {
+              path: '',
+              name: 'classList',
+              component: ClassListView,
+            },
+            {
+              path: 'create',
+              name: 'classCreate',
+              component: ClassCreationView,
+            },
+            {
+              path: ':id',
+              name: 'classDetail',
+              component: ClassDetailView,
+            },
+          ],
+        },
+        {
+          path: 'account',
+          name: 'account',
+          component: ProfileView,
         },
       ],
     },
