@@ -2,7 +2,7 @@
   <div class="space-y-6">
     <div class="flex justify-start items-center gap-4">
       <RouterLink
-        to="/class"
+        to="/operator/classes"
         class="cursor-pointer hover:-translate-x-0.25 transition-all"
       >
         <ArrowLeft class="size-6" />
@@ -13,7 +13,7 @@
     <div class="flex min-h-[calc(100dvh_-_84px)] h-full items-center">
       <!-- Skeletons -->
       <div
-        v-if="loading"
+        v-if="isLoading"
         class="w-full rounded-lg bg-white border border-gray-300 p-4 space-y-3 animate-pulse"
       >
         <div
@@ -38,6 +38,8 @@
           </div>
         </div>
       </div>
+
+      <!-- Kelas detail  -->
       <div v-if="classData">
         <div class="rounded-lg bg-white border border-gray-300 p-4 mb-4">
           <div
@@ -110,6 +112,54 @@
             </div>
           </div>
         </div>
+
+        <!-- assignment  -->
+        <div
+          v-if="classData.status === 'menunggu'"
+          class="rounded-lg bg-white border border-gray-300 space-y-3 p-4 mb-4"
+        >
+          <!-- Penugasan Guru  -->
+          <div class="space-y-1">
+            <label class="block text-sm font-medium text-gray-700"
+              >Tugaskan Guru</label
+            >
+            <select
+              v-model="form.teacher_id"
+              required
+              class="w-full rounded-lg border text-sm px-3 py-2 transition-colors focus:ring-1 border border-gray-300 focus:border-cyan-400 focus:ring-cyan-400"
+            >
+              <option value="">Pilih Guru</option>
+              <option
+                v-for="teacher in teacherData"
+                :key="teacher.index"
+                :value="teacher.id"
+              >
+                {{ teacher.name }} - {{ teacher.email }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-between gap-2">
+            <button
+              @click="classAction('ditolak')"
+              :disabled="isLoading"
+              class="w-full text-sm text-red-400 font-medium rounded-lg border border-red-400 px-3 py-2 cursor-pointer"
+            >
+              {{ isLoading ? 'Memproses...' : 'Tolak Kelas' }}
+            </button>
+
+            <button
+              @click="classAction('penugasan')"
+              :disabled="isLoading"
+              class="w-full font-medium rounded-lg bg-cyan-400 text-white text-sm transition-colors shadow-sm px-3 py-2 hover:bg-cyan-500 disabled:opacity-50"
+            >
+              {{ isLoading ? 'Memproses...' : 'Proses' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Absensi  -->
         <div
           v-if="classData.attendances_grouped"
           class="rounded-lg bg-white border border-gray-300 p-4"
@@ -162,7 +212,7 @@
 
 <script setup>
 import axios from '@/lib/axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import {
@@ -176,7 +226,12 @@ import {
 
 const route = useRoute();
 const classData = ref();
-const loading = ref(true);
+const teacherData = ref();
+const isLoading = ref(true);
+
+const form = reactive({
+  teacher_id: '',
+});
 
 function toTitleCase(str) {
   return str.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
@@ -224,15 +279,44 @@ function formatTime(dateTimeString) {
 const loadClassData = async () => {
   try {
     const classId = route.params.id;
-    const response = await axios.get(`/class/${classId}`);
+    const response = await axios.get(`/operator/class/${classId}`);
 
     classData.value = response.data.data;
   } catch (error) {
     console.log(error);
   } finally {
-    loading.value = false;
+    isLoading.value = false;
   }
 };
 
-onMounted(loadClassData);
+const loadTeacherData = async () => {
+  try {
+    const response = await axios.get('teachers');
+    teacherData.value = response.data.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const classAction = async (action) => {
+  try {
+    const payload = {
+      action: action,
+      teacher_id: form.teacher_id,
+    };
+    const response = await axios.put(
+      `/operator/class/${classData.value.id}/assign`,
+      payload
+    );
+    classData.value.status = response.data.data.status;
+    classData.value.teacher_id = response.data.data.teacher_id;
+  } catch (error) {
+    console.error(error);
+  } finally {
+  }
+};
+
+onMounted(async () => {
+  await Promise.all([loadClassData(), loadTeacherData()]);
+});
 </script>

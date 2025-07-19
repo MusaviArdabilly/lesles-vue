@@ -7,11 +7,11 @@
     </div>
     <nav class="fixed right-0 bottom-0 left-0 bg-white">
       <div
-        class="flex max-w-md w-full h-16 justify-around items-center border-t border-gray-300 mx-auto"
+        class="flex max-w-md w-full h-16 items-center border-t border-gray-300 mx-auto"
       >
         <RouterLink
           to="/attendance"
-          class="flex flex-col items-center"
+          class="flex flex-1 flex-col items-center"
           :class="{
             'text-cyan-400': route.path.includes('/attendance'),
             'text-gray-700': !route.path.includes('/attendance'),
@@ -22,7 +22,7 @@
         </RouterLink>
         <RouterLink
           to="/class"
-          class="flex flex-col items-center"
+          class="flex flex-1 flex-col items-center"
           :class="{
             'text-cyan-400': route.path.includes('/class'),
             'text-gray-700': !route.path.includes('/class'),
@@ -33,7 +33,7 @@
         </RouterLink>
         <RouterLink
           to="/account"
-          class="flex flex-col items-center"
+          class="flex flex-1 flex-col items-center"
           :class="{
             'text-cyan-400': route.path.includes('/account'),
             'text-gray-700': !route.path.includes('/account'),

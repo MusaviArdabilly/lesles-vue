@@ -118,7 +118,7 @@ const showToast = inject('showToast');
 const auth = useAuthStore();
 
 let intervalId = null;
-const showForm = ref(true);
+const showForm = ref(false);
 const classList = ref([]);
 const isReschedule = ref(false);
 const isLoading = ref(false);
@@ -138,10 +138,9 @@ const form = reactive({
 const checkAttendanceStatus = async () => {
   try {
     const response = await axios.get('/attendance/check-open');
-    showForm.value = response.data.status;
+    showForm.value = response.data.success;
 
     if (response.data.success) {
-      showForm.value = true;
       clearInterval(intervalId);
     }
   } catch (error) {
@@ -152,8 +151,12 @@ const checkAttendanceStatus = async () => {
 const fetchClassListToday = async () => {
   try {
     const filter = isReschedule.value ? 'all' : 'today';
-    const res = await axios.get(`/class?filter=${filter}`);
-    classList.value = res.data.data || [];
+    const response = await axios.get(`/class?filter=${filter}&status=aktif`);
+    classList.value = response.data.data || [];
+
+    if (auth.user.role === 'guru') {
+      showForm.value = response.data.data.length !== 0;
+    }
   } catch (e) {
     console.error('Failed to fetch classes:', e);
   }

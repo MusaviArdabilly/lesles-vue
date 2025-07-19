@@ -8,11 +8,16 @@ import AttendanceView from '@/views/AttendanceView.vue';
 import CompleteStudentProfileView from '@/views/auth/CompleteStudentProfileView.vue';
 import CompleteTeacherProfileView from '@/views/auth/CompleteTeacherProfileView.vue';
 import ClassView from '@/views/class/ClassView.vue';
-import ProfileView from '@/views/AccountView.vue';
+import AccountView from '@/views/AccountView.vue';
 import ClassListView from '@/views/class/ClassListView.vue';
 import ClassCreationView from '@/views/class/ClassCreationView.vue';
 import ClassDetailView from '@/views/class/ClassDetailView.vue';
 import LandingPagView from '@/views/LandingPagView.vue';
+import OperatorDashboardView from '@/views/operator/OperatorDashboardView.vue';
+import OperatorClassListView from '@/views/operator/class/OperatorClassListView.vue';
+import OperatorAttendanceView from '@/views/operator/OperatorAttendanceView.vue';
+import OperatorMembersView from '@/views/operator/OperatorMembersView.vue';
+import OperatorClassDetailView from '@/views/operator/class/OperatorClassDetailView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -93,7 +98,43 @@ const router = createRouter({
         {
           path: 'account',
           name: 'account',
-          component: ProfileView,
+          component: AccountView,
+        },
+      ],
+    },
+    {
+      path: '/operator',
+      meta: { requiresAuth: true, layout: 'operator' },
+      children: [
+        {
+          path: '',
+          name: 'operator-dashboard',
+          component: OperatorDashboardView,
+        },
+        {
+          path: 'classes',
+          name: 'operator-class',
+          component: OperatorClassListView,
+        },
+        {
+          path: 'class/:id',
+          name: 'operator-class-detail',
+          component: OperatorClassDetailView,
+        },
+        {
+          path: 'attendances',
+          name: 'operator-attendance',
+          component: OperatorAttendanceView,
+        },
+        {
+          path: 'members',
+          name: 'operator-member',
+          component: OperatorMembersView,
+        },
+        {
+          path: 'account',
+          name: 'operator-account',
+          component: AccountView,
         },
       ],
     },

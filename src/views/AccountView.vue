@@ -104,7 +104,7 @@
       <!-- Logout Section -->
       <div class="flex justify-end gap-4 pt-3 border-t border-gray-200">
         <button
-          @click="auth.logout()"
+          @click="logout()"
           class="text-sm font-medium rounded-lg border px-3 py-2 transition-colors hover:bg-red-100 text-red-500"
         >
           Logout
@@ -127,9 +127,11 @@ import { inject, computed, ref, onMounted, watch } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { authService } from '@/services/authService';
 import axios from '@/lib/axios';
+import { useRouter } from 'vue-router';
 
 const auth = useAuthStore();
 const showToast = inject('showToast');
+const router = useRouter();
 
 const name = ref('');
 const phone = ref('');
@@ -248,6 +250,10 @@ const updateUser = async () => {
   } finally {
     isLoading.value = false;
   }
+};
+const logout = async () => {
+  await auth.logout();
+  router.push('/login');
 };
 
 // Watch for changes in auth.user to reinitialize form data

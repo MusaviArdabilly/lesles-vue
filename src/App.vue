@@ -21,6 +21,7 @@ import Toast from './components/Toast.vue';
 
 import AuthLayout from './layouts/AuthLayout.vue';
 import UserLayout from './layouts/UserLayout.vue';
+import OperatorLayout from './layouts/OperatorLayout.vue';
 
 // Refs & Router
 const toast = ref(null);
@@ -30,6 +31,7 @@ const route = useRoute();
 const layoutMap = {
   auth: AuthLayout,
   user: UserLayout,
+  operator: OperatorLayout,
 };
 
 // Compute Current Layout Component
