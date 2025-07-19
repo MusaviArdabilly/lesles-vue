@@ -110,8 +110,6 @@ async function checkIfVerified() {
       res.email_verified ||
       res.verified;
 
-    console.log('Is email verified?', isVerified);
-
     if (isVerified) {
       console.log('Email verified! Stopping polling and redirecting...');
       stopPolling();
@@ -157,8 +155,6 @@ async function checkVerificationAndRedirect() {
       res.data?.verified ||
       res.email_verified ||
       res.verified;
-
-    console.log('Is email verified?', isVerified);
 
     if (isVerified) {
       console.log('Email verified! Redirecting...');

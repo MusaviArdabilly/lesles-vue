@@ -28,7 +28,7 @@ auth.initializeAuth();
 
 if (auth.token && !auth.user) {
   await auth.fetchUser().catch((error) => {
-    errorHandler.log(error, 'Bootstrap - Fetch User');
+    console.log(error, 'Bootstrap - Fetch User');
     auth.clearAuth();
   });
 }
