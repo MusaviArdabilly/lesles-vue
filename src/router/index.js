@@ -12,13 +12,15 @@ import ProfileView from '@/views/AccountView.vue';
 import ClassListView from '@/views/class/ClassListView.vue';
 import ClassCreationView from '@/views/class/ClassCreationView.vue';
 import ClassDetailView from '@/views/class/ClassDetailView.vue';
+import LandingPagView from '@/views/LandingPagView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/login',
+      name: 'root',
+      component: LandingPagView,
     },
     {
       path: '/',
