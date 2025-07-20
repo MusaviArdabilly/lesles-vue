@@ -168,7 +168,7 @@ export const useAuthStore = defineStore('auth', {
         return '/verify-email';
       }
 
-      if (this.user.profile_complete === 0) {
+      if (Number(this.user.profile_complete) === 0) {
         if (this.user.role === 'guru') {
           return '/complete-teacher-profile';
         }
@@ -185,33 +185,6 @@ export const useAuthStore = defineStore('auth', {
       };
 
       return roleRoutes[this.user.role] || '/class';
-    },
-
-    isStudentProfileComplete() {
-      if (!this.user) return false;
-
-      const sp = this.user.student_profile;
-      const loc = sp?.location;
-      const hasRequiredFields =
-        this.user.phone &&
-        sp?.school_name &&
-        sp?.education_level_id &&
-        loc?.province_id &&
-        loc?.city_id;
-
-      return (
-        this.user.profile_complete === 1 ||
-        this.user.profile_completed === true ||
-        hasRequiredFields
-      );
-    },
-
-    isTeacherProfileComplete() {
-      if (!this.user) return false;
-
-      return (
-        this.user.profile_complete === 1 || this.user.profile_completed === true
-      );
     },
   },
 });

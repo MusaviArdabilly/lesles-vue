@@ -66,11 +66,7 @@ const router = createRouter({
     },
     {
       path: '/',
-      meta: {
-        requiresAuth: true,
-        roles: ['user', 'admin'],
-        layout: 'user',
-      },
+      meta: { requiresAuth: true, layout: 'user' },
       children: [
         {
           path: 'attendance',
@@ -108,11 +104,7 @@ const router = createRouter({
     },
     {
       path: '/operator',
-      meta: {
-        requiresAuth: true,
-        roles: ['operator', 'admin'],
-        layout: 'operator',
-      },
+      meta: { requiresAuth: true, layout: 'operator' },
       children: [
         {
           path: '',
