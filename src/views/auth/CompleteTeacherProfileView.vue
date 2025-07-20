@@ -203,10 +203,12 @@ const filteredSubjects = computed(() => {
 
   const filtered = subjects.value.filter((subject) => {
     const isIncluded = form.education_level_ids.includes(
-      subject.education_level_id
+      Number(subject.education_level_id)
     );
     console.log(
-      `Subject ${subject.name} (level ${subject.education_level_id}): ${isIncluded}`
+      `Subject ${subject.name} (level ${Number(
+        subject.education_level_id
+      )}): ${isIncluded}`
     );
     return isIncluded;
   });

@@ -10,7 +10,7 @@
           <div class="space-y-1">
             <div class="flex items-center justify-between gap-3">
               <span class="text-xs font-medium text-gray-700"
-                >Absensi untuk jadwal sesi sebelumnya?</span
+                >Absensi untuk perpindahan jadwal sementara?</span
               >
               <label class="relative inline-flex cursor-pointer items-center">
                 <input
@@ -98,11 +98,34 @@
           dilakukan di hari tersebut
         </p>
       </div>
+
       <div v-else>
-        <p class="text-center font-medium mb-2">Absensi belum di buka</p>
-        <p class="text-xs text-center">
-          Jika sekarang adalah sesimu untuk les, segera hubungi tentormu
-        </p>
+        <div v-if="auth.user.role === 'guru'">
+          <p
+            class="text-sm text-center text-red-500 border-b border-gray-500 pb-4 mb-4"
+          >
+            Belum ada kelas yang dijadwalkan untuk hari ini.
+          </p>
+          <p class="text-center font-medium mb-2">Absensi Penjadwalan Ulang</p>
+          <p class="text-xs text-center mb-4">
+            Digunakan untuk mengganti sesi dalam satu waktu tertentu, tanpa
+            mengubah jadwal utama.
+          </p>
+          <!-- Submit Button -->
+          <button
+            @click="(showForm = true), (isReschedule = true)"
+            class="w-full font-medium rounded-lg bg-cyan-400 text-white text-sm transition-colors shadow-sm px-3 py-2 hover:bg-cyan-500 disabled:opacity-50"
+          >
+            Buka Form Penjadwalan Ulang
+          </button>
+        </div>
+        <div v-if="auth.user.role === 'murid'">
+          <p class="text-center font-medium mb-2">Absensi Belum Dibuka</p>
+          <p class="text-xs text-center">
+            Jika ini adalah waktu lesmu, segera hubungi tentormu untuk
+            memastikan kehadiran.
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -150,7 +173,8 @@ const checkAttendanceStatus = async () => {
 
 const fetchClassListToday = async () => {
   try {
-    const filter = isReschedule.value ? 'all' : 'today';
+    // const filter = isReschedule.value ? 'all' : 'today';
+    const filter = 'all';
     const response = await axios.get(`/class?filter=${filter}&status=aktif`);
     classList.value = response.data.data || [];
 
