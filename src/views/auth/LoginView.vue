@@ -158,7 +158,7 @@ const login = async () => {
     console.error(err);
     error.value =
       err?.response?.data?.message || 'Terjadi kesalahan saat login';
-    showUserError(err, showToast);
+    showToast(error, 'error');
   } finally {
     isLoading.value = false;
   }

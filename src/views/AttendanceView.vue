@@ -219,9 +219,9 @@ const classSubmission = async () => {
 
     isLoading.value = true;
     await axios.post('/attendance', payload);
-    showToast('Absensi berhasil dikirim');
+    showToast('Absensi berhasil dikirim', 'success');
   } catch (error) {
-    showToast('Absensi Gagal');
+    showToast('Absensi Gagal', 'error');
   } finally {
     isLoading.value = false;
   }

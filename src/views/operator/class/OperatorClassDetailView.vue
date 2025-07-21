@@ -76,7 +76,7 @@
               class="flex items-center gap-2"
               :class="classData.teacher ? '' : 'text-yellow-500'"
             >
-              <UserRoundPen class="flex-none size-5" />
+              <UserPen class="flex-none size-5" />
               <label class="text-xs">{{
                 classData.teacher
                   ? `${classData.teacher.name} - ${classData.teacher.phone}`
@@ -84,10 +84,20 @@
               }}</label>
             </div>
             <div class="flex items-center gap-2">
-              <Users class="flex-none size-5" />
+              <component
+                :is="classData.member_names.length === 1 ? User : Users"
+                class="flex-none size-5"
+              />
               <label class="text-xs">{{
                 classData.member_names?.join(', ')
               }}</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <Book class="flex-none size-5" />
+              <label class="text-xs"
+                >{{ classData.education_level.code }} -
+                {{ classData.subject.name }}</label
+              >
             </div>
             <div class="flex items-center gap-2">
               <CalendarDays class="flex-none size-5" />
@@ -164,7 +174,6 @@
           v-if="classData.attendances_grouped"
           class="rounded-lg bg-white border border-gray-300 p-4"
         >
-          <!-- TODO: remove bottom line  -->
           <div
             v-for="([date, attendances], index) in Object.entries(
               classData.attendances_grouped
@@ -200,7 +209,7 @@
           </div>
         </div>
         <div
-          v-if="classData.attendances_grouped.length === 0"
+          v-if="classData.attendances_grouped === null"
           class="rounded-lg bg-white border border-gray-300 p-4"
         >
           <p class="text-sm text-center font-medium">Belum ada absensi</p>
@@ -220,8 +229,10 @@ import {
   MapPinned,
   CalendarDays,
   Users,
-  UserRoundPen,
+  User,
   Phone,
+  Book,
+  UserPen,
 } from 'lucide-vue-next';
 
 const route = useRoute();
