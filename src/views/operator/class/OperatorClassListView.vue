@@ -34,6 +34,7 @@
           </div>
         </div>
       </div>
+
       <div v-else-if="classes.length" class="grid grid-cols-1 gap-4">
         <RouterLink
           :to="`/operator/class/${item.id}`"

@@ -16,7 +16,7 @@ import LandingPagView from '@/views/LandingPagView.vue';
 import OperatorDashboardView from '@/views/operator/OperatorDashboardView.vue';
 import OperatorClassListView from '@/views/operator/class/OperatorClassListView.vue';
 import OperatorAttendanceView from '@/views/operator/OperatorAttendanceView.vue';
-import OperatorMembersView from '@/views/operator/OperatorMembersView.vue';
+import OperatorMembersView from '@/views/operator/member/OperatorMembersListView.vue';
 import OperatorClassDetailView from '@/views/operator/class/OperatorClassDetailView.vue';
 
 const router = createRouter({
