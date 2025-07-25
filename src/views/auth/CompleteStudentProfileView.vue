@@ -17,13 +17,30 @@
         <label class="block text-sm font-medium text-gray-700"
           >No. Telepon</label
         >
-        <input
-          type="tel"
-          v-model="form.phone"
-          required
-          :class="inputClass(fieldErrors.phone)"
-          placeholder="081234567890"
-        />
+        <div class="relative flex">
+          <span
+            class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg"
+          >
+            +62
+          </span>
+          <input
+            type="tel"
+            v-model="phoneInput"
+            @input="handlePhoneInput"
+            @blur="validatePhone"
+            :class="phoneInputClass"
+            placeholder="8123456789"
+            maxlength="12"
+            class="flex-1 rounded-l-none"
+            required
+          />
+          <div
+            v-if="phoneValidationStatus === 'valid'"
+            class="absolute right-3 top-2.5"
+          >
+            <span class="text-green-500 text-sm">✓</span>
+          </div>
+        </div>
         <div v-if="fieldErrors.phone" class="text-xs text-red-600">
           {{ fieldErrors.phone[0] }}
         </div>
@@ -189,12 +206,29 @@
         <label class="block text-sm font-medium text-gray-700"
           >No. WA Orang Tua</label
         >
-        <input
-          type="tel"
-          v-model="form.parent_phone"
-          :class="inputClass(fieldErrors.parent_phone)"
-          placeholder="081234567890"
-        />
+        <div class="relative flex">
+          <span
+            class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg"
+          >
+            +62
+          </span>
+          <input
+            type="tel"
+            v-model="parentPhoneInput"
+            @input="handleParentPhoneInput"
+            @blur="validateParentPhone"
+            :class="parentPhoneInputClass"
+            placeholder="8123456789"
+            maxlength="12"
+            class="flex-1 rounded-l-none"
+          />
+          <div
+            v-if="parentPhoneValidationStatus === 'valid'"
+            class="absolute right-3 top-2.5"
+          >
+            <span class="text-green-500 text-sm">✓</span>
+          </div>
+        </div>
         <div v-if="fieldErrors.parent_phone" class="text-xs text-red-600">
           {{ fieldErrors.parent_phone[0] }}
         </div>
@@ -250,7 +284,7 @@
       <!-- Submit Button -->
       <button
         type="submit"
-        :disabled="isLoading"
+        :disabled="isLoading || !isFormValid"
         class="w-full font-medium rounded-lg bg-cyan-400 text-white text-sm transition-colors shadow-sm px-3 py-2 hover:bg-cyan-500 disabled:opacity-50"
       >
         {{ isLoading ? 'Memproses...' : 'Lengkapi Profil' }}
@@ -293,6 +327,12 @@ const form = reactive({
   password_confirmation: '',
 });
 
+// Phone validation states
+const phoneInput = ref('');
+const phoneValidationStatus = ref('');
+const parentPhoneInput = ref('');
+const parentPhoneValidationStatus = ref('');
+
 const educationLevels = ref({});
 const provinces = ref([]);
 const cities = ref([]);
@@ -315,6 +355,139 @@ const availableGrades = computed(() => {
   if (level.includes('SMP')) return [7, 8, 9];
   if (level.includes('SMA')) return [10, 11, 12];
   return [];
+});
+
+const isFormValid = computed(() => {
+  return (
+    form.phone &&
+    phoneValidationStatus.value === 'valid' &&
+    form.province_id &&
+    form.city_id &&
+    form.district_id &&
+    form.village_id &&
+    form.education_level_id &&
+    form.school_name &&
+    form.grade &&
+    form.password &&
+    form.password === form.password_confirmation
+  );
+});
+
+// Phone utilities
+const normalizeToLocalFormat = (input) => {
+  const digits = input.replace(/\D/g, '');
+
+  if (digits.startsWith('62')) {
+    return digits.substring(2);
+  }
+
+  if (digits.startsWith('0')) {
+    return digits.substring(1);
+  }
+
+  return digits;
+};
+
+const formatPhoneDisplay = (phone) => {
+  return phone.replace(/\D/g, '');
+};
+
+const isValidIndonesianMobile = (phone) => {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length < 9 || digits.length > 12) return false;
+  return true;
+};
+
+// Phone input handlers
+const handlePhoneInput = (event) => {
+  let value = event.target.value;
+  const normalized = normalizeToLocalFormat(value);
+
+  phoneInput.value = normalized;
+  event.target.value = normalized;
+
+  phoneValidationStatus.value = '';
+
+  if (normalized.length > 0) {
+    if (isValidIndonesianMobile(normalized)) {
+      form.phone = '0' + normalized;
+      phoneValidationStatus.value = 'valid';
+    } else {
+      form.phone = '';
+      phoneValidationStatus.value = 'invalid';
+    }
+  } else {
+    form.phone = '';
+  }
+};
+
+const validatePhone = () => {
+  if (phoneInput.value && phoneValidationStatus.value === 'valid') {
+    phoneInput.value = formatPhoneDisplay(phoneInput.value);
+  }
+};
+
+const handleParentPhoneInput = (event) => {
+  let value = event.target.value;
+  const normalized = normalizeToLocalFormat(value);
+
+  parentPhoneInput.value = normalized;
+  event.target.value = normalized;
+
+  parentPhoneValidationStatus.value = '';
+
+  if (normalized.length > 0) {
+    if (isValidIndonesianMobile(normalized)) {
+      form.parent_phone = '0' + normalized;
+      parentPhoneValidationStatus.value = 'valid';
+    } else {
+      form.parent_phone = '';
+      parentPhoneValidationStatus.value = 'invalid';
+    }
+  } else {
+    form.parent_phone = '';
+  }
+};
+
+const validateParentPhone = () => {
+  if (parentPhoneInput.value && parentPhoneValidationStatus.value === 'valid') {
+    parentPhoneInput.value = formatPhoneDisplay(parentPhoneInput.value);
+  }
+};
+
+// Phone input classes
+const phoneInputClass = computed(() => {
+  const base =
+    'w-full rounded-lg border text-sm px-3 py-2 transition-colors focus:ring-1';
+
+  if (fieldErrors.value.phone) {
+    return `${base} border-red-300 focus:border-red-400 focus:ring-red-400`;
+  }
+
+  if (phoneValidationStatus.value === 'valid') {
+    return `${base} border-green-300 focus:border-green-400 focus:ring-green-400`;
+  } else if (phoneValidationStatus.value === 'invalid') {
+    return `${base} border-red-300 focus:border-red-400 focus:ring-red-400`;
+  }
+
+  return `${base} border-gray-300 focus:border-cyan-400 focus:ring-cyan-400`;
+});
+
+const parentPhoneInputClass = computed(() => {
+  const base =
+    'w-full rounded-lg border text-sm px-3 py-2 transition-colors focus:ring-1';
+
+  if (fieldErrors.value.parent_phone) {
+    return `${base} border-red-300 focus:border-red-400 focus:ring-red-400`;
+  }
+
+  if (parentPhoneValidationStatus.value === 'valid') {
+    return `${base} border-green-300 focus:border-green-400 focus:ring-green-400`;
+  } else if (parentPhoneValidationStatus.value === 'invalid') {
+    return `${base} border-red-300 focus:border-red-400 focus:ring-red-400`;
+  }
+
+  return `${base} border-gray-300 focus:border-cyan-400 focus:ring-cyan-400`;
 });
 
 // Helper functions

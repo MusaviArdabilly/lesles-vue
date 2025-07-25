@@ -41,14 +41,31 @@
         <label for="phone" class="block text-sm font-medium text-gray-700"
           >No. HP (WA)</label
         >
-        <input
-          type="text"
-          id="phone"
-          inputmode="numeric"
-          v-model="form.phone"
-          :class="inputClass('phone')"
-          placeholder="Nomor Whatsapp"
-        />
+        <div class="relative flex">
+          <span
+            class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg"
+          >
+            +62
+          </span>
+          <input
+            type="tel"
+            id="phone"
+            v-model="phoneInput"
+            @input="handlePhoneInput"
+            @blur="validatePhone"
+            :class="phoneInputClass"
+            placeholder="8123456789"
+            maxlength="12"
+            class="flex-1 rounded-l-none"
+            @paste.prevent
+          />
+          <div
+            v-if="phoneValidationStatus === 'valid'"
+            class="absolute right-3 top-2.5"
+          >
+            <span class="text-green-500 text-sm">✓</span>
+          </div>
+        </div>
         <div v-if="fieldErrors.phone" class="text-xs text-red-600 mt-1">
           {{ fieldErrors.phone[0] }}
         </div>
@@ -129,10 +146,10 @@
 
       <button
         @click="register"
-        :disabled="loading"
+        :disabled="loading || !isFormValid"
         :class="[
           'w-full font-medium rounded-lg text-sm transition-colors shadow-sm px-3 py-2',
-          loading
+          loading || !isFormValid
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'bg-cyan-400 text-white cursor-pointer hover:bg-cyan-500',
         ]"
@@ -165,13 +182,15 @@ const showToast = inject('showToast');
 
 const form = ref({
   name: '',
-  phone: '',
+  phone: '', // This will store the normalized phone number for the API
   email: '',
   password: '',
   password_confirmation: '',
   role: 'guru',
 });
 
+const phoneInput = ref(''); // This will store the user input (without +62)
+const phoneValidationStatus = ref(''); // 'valid', 'invalid', or ''
 const fieldErrors = ref({});
 const generalError = ref('');
 const loading = ref(false);
@@ -180,6 +199,84 @@ const passwordMatch = computed(() => {
   if (!form.value.password_confirmation) return true;
   return form.value.password === form.value.password_confirmation;
 });
+
+const isFormValid = computed(() => {
+  return (
+    form.value.name &&
+    form.value.email &&
+    form.value.password &&
+    passwordMatch.value &&
+    phoneValidationStatus.value === 'valid'
+  );
+});
+
+// Phone number utilities
+const normalizeToLocalFormat = (input) => {
+  // Remove all non-digit characters
+  const digits = input.replace(/\D/g, '');
+
+  // If input starts with 62 (from +62 format), remove it
+  if (digits.startsWith('62')) {
+    return digits.substring(2);
+  }
+
+  // If input starts with 0, remove it (user might type 08xxx)
+  if (digits.startsWith('0')) {
+    return digits.substring(1);
+  }
+
+  return digits;
+};
+
+const formatPhoneDisplay = (phone) => {
+  // Just return the digits without any dashes
+  return phone.replace(/\D/g, '');
+};
+
+const isValidIndonesianMobile = (phone) => {
+  const digits = phone.replace(/\D/g, '');
+
+  // Should be 9-12 digits after +62
+  if (digits.length < 9 || digits.length > 12) return false;
+
+  return true; // Accept any number in the valid length range
+};
+
+const handlePhoneInput = (event) => {
+  let value = event.target.value;
+
+  // Handle pasted content - normalize first
+  const normalized = normalizeToLocalFormat(value);
+
+  // Update the input value to show normalized digits
+  phoneInput.value = normalized;
+
+  // Also update the actual input element to reflect the change
+  event.target.value = normalized;
+
+  // Clear previous validation
+  phoneValidationStatus.value = '';
+
+  if (normalized.length > 0) {
+    if (isValidIndonesianMobile(normalized)) {
+      // Store in 0xxxxxxxxxx format for the form
+      form.value.phone = '0' + normalized;
+      phoneValidationStatus.value = 'valid';
+    } else {
+      form.value.phone = '';
+      phoneValidationStatus.value = 'invalid';
+    }
+  } else {
+    form.value.phone = '';
+  }
+};
+
+const validatePhone = () => {
+  if (phoneInput.value && phoneValidationStatus.value === 'valid') {
+    // Keep the display clean without formatting
+    phoneInput.value = formatPhoneDisplay(phoneInput.value);
+  }
+};
 
 const clearErrors = () => {
   fieldErrors.value = {};
@@ -193,6 +290,13 @@ const register = async () => {
   if (form.value.password !== form.value.password_confirmation) {
     fieldErrors.value.password_confirmation = ['Password tidak cocok'];
     generalError.value = 'Password dan konfirmasi password harus sama.';
+    return;
+  }
+
+  // Validate phone number one more time
+  if (!form.value.phone || phoneValidationStatus.value !== 'valid') {
+    fieldErrors.value.phone = ['Nomor HP tidak valid'];
+    generalError.value = 'Mohon periksa nomor HP Anda.';
     return;
   }
 
@@ -230,6 +334,23 @@ const register = async () => {
     loading.value = false;
   }
 };
+
+const phoneInputClass = computed(() => {
+  const base =
+    'w-full rounded-lg border text-sm px-3 py-2 transition-colors focus:ring-1';
+
+  if (fieldErrors.value.phone) {
+    return `${base} border-red-300 focus:border-red-400 focus:ring-red-400`;
+  }
+
+  if (phoneValidationStatus.value === 'valid') {
+    return `${base} border-green-300 focus:border-green-400 focus:ring-green-400`;
+  } else if (phoneValidationStatus.value === 'invalid') {
+    return `${base} border-red-300 focus:border-red-400 focus:ring-red-400`;
+  }
+
+  return `${base} border-gray-300 focus:border-cyan-400 focus:ring-cyan-400`;
+});
 
 const inputClass = (field, isConfirmation = false) => {
   const base =
