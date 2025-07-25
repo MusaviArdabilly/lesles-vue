@@ -96,9 +96,12 @@
                 }}</label>
               </div>
               <div class="flex items-center gap-2">
-                <Users class="flex-none size-5" />
+                <component
+                  :is="item.members.length === 1 ? User : Users"
+                  class="flex-none size-5"
+                />
                 <label class="text-xs">{{
-                  item.member_names?.join(', ')
+                  item.members.map((item) => item.name).join(', ')
                 }}</label>
               </div>
               <div class="flex items-center gap-2">
@@ -151,7 +154,7 @@
 import { inject, onMounted, ref } from 'vue';
 import axios from '@/lib/axios';
 
-import { CalendarDays, Users, UserRoundPen } from 'lucide-vue-next';
+import { CalendarDays, User, Users, UserRoundPen } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth';
 
 const auth = useAuthStore();

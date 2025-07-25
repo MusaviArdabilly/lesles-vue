@@ -3,6 +3,14 @@
     <div class="sticky top-0">
       <div class="flex justify-between items-center">
         <h1 class="text-xl font-semibold">Kelas</h1>
+        <div v-if="auth.user.role === 'admin'">
+          <RouterLink
+            to="/operator/class/create"
+            class="text-sm text-white font-medium rounded-lg bg-cyan-400 p-2 cursor-pointer hover:bg-cyan-500"
+          >
+            Buat Kelas
+          </RouterLink>
+        </div>
       </div>
     </div>
 
@@ -91,13 +99,19 @@
               <div class="flex items-center gap-2">
                 <Users class="flex-none size-5" />
                 <label class="text-xs">{{
-                  item.member_names?.join(', ')
+                  item.members.map((item) => item.name).join(', ')
                 }}</label>
               </div>
               <div class="flex items-center gap-2">
                 <CalendarDays class="flex-none size-5" />
                 <label class="text-xs">
                   {{ formatSchedule(item.schedules) }}
+                </label>
+              </div>
+              <div class="flex items-center text-gray-500 gap-2">
+                <Tag class="flex-none size-5" />
+                <label class="text-xs">
+                  {{ item.created_by.name }} - {{ item.created_by.phone }}
                 </label>
               </div>
             </div>
@@ -144,7 +158,7 @@
 import { inject, onMounted, ref } from 'vue';
 import axios from '@/lib/axios';
 
-import { CalendarDays, Users, UserRoundPen } from 'lucide-vue-next';
+import { CalendarDays, Users, UserRoundPen, Tag } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth';
 
 const auth = useAuthStore();

@@ -21,33 +21,33 @@
           <span class="text-[10px]">Dashboard</span>
         </RouterLink>
         <RouterLink
-          to="/operator/attendances"
+          to="/operator/attendance"
           class="flex flex-1 flex-col items-center"
           :class="{
-            'text-cyan-400': route.path === '/operator/attendances',
-            'text-gray-700': !route.path === '/operator/attendances',
+            'text-cyan-400': route.path === '/operator/attendance',
+            'text-gray-700': !route.path === '/operator/attendance',
           }"
         >
           <ClipboardCheck class="size-6 mb-1" />
           <span class="text-[10px]">Absensi</span>
         </RouterLink>
         <RouterLink
-          to="/operator/classes"
+          to="/operator/class"
           class="flex flex-1 flex-col items-center"
           :class="{
-            'text-cyan-400': route.path === '/operator/classes',
-            'text-gray-700': !route.path === '/operator/classes',
+            'text-cyan-400': route.path.startsWith('/operator/class'),
+            'text-gray-700': !route.path.startsWith('/operator/class'),
           }"
         >
           <ClipboardList class="size-6 mb-1" />
           <span class="text-[10px]">Kelas</span>
         </RouterLink>
         <RouterLink
-          to="/operator/members"
+          to="/operator/member"
           class="flex flex-1 flex-col items-center"
           :class="{
-            'text-cyan-400': route.path === '/operator/members',
-            'text-gray-700': !route.path === '/operator/members',
+            'text-cyan-400': route.path === '/operator/member',
+            'text-gray-700': !route.path === '/operator/member',
           }"
         >
           <Users class="size-6 mb-1" />

@@ -178,7 +178,7 @@ export const useAuthStore = defineStore('auth', {
       }
 
       const roleRoutes = {
-        admin: '/admin/dashboard',
+        admin: '/operator',
         operator: '/operator',
         guru: '/class',
         murid: '/class',

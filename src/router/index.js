@@ -18,6 +18,8 @@ import OperatorClassListView from '@/views/operator/class/OperatorClassListView.
 import OperatorAttendanceView from '@/views/operator/OperatorAttendanceView.vue';
 import OperatorMembersView from '@/views/operator/member/OperatorMembersListView.vue';
 import OperatorClassDetailView from '@/views/operator/class/OperatorClassDetailView.vue';
+import OperatorClassCreationView from '@/views/operator/class/OperatorClassCreationView.vue';
+import OperatorClassEditView from '@/views/operator/class/OperatorClassEditView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,17 +82,17 @@ const router = createRouter({
           children: [
             {
               path: '',
-              name: 'classList',
+              name: 'class-list',
               component: ClassListView,
             },
             {
               path: 'create',
-              name: 'classCreate',
+              name: 'class-create',
               component: ClassCreationView,
             },
             {
               path: ':id',
-              name: 'classDetail',
+              name: 'class-detail',
               component: ClassDetailView,
             },
           ],
@@ -112,22 +114,37 @@ const router = createRouter({
           component: OperatorDashboardView,
         },
         {
-          path: 'classes',
-          name: 'operator-class',
-          component: OperatorClassListView,
+          path: 'class',
+          children: [
+            {
+              path: '',
+              name: 'operator-class-list',
+              component: OperatorClassListView,
+            },
+            {
+              path: 'create',
+              name: 'operator-class-create',
+              component: OperatorClassCreationView,
+            },
+            {
+              path: ':id',
+              name: 'operator-class-detail',
+              component: OperatorClassDetailView,
+            },
+            {
+              path: ':id/edit',
+              name: 'operator-class-edit',
+              component: OperatorClassEditView,
+            },
+          ],
         },
         {
-          path: 'class/:id',
-          name: 'operator-class-detail',
-          component: OperatorClassDetailView,
-        },
-        {
-          path: 'attendances',
+          path: 'attendance',
           name: 'operator-attendance',
           component: OperatorAttendanceView,
         },
         {
-          path: 'members',
+          path: 'member',
           name: 'operator-member',
           component: OperatorMembersView,
         },

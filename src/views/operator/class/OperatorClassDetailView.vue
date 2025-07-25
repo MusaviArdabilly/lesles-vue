@@ -2,7 +2,7 @@
   <div class="space-y-6">
     <div class="flex justify-start items-center gap-4">
       <RouterLink
-        to="/operator/classes"
+        to="/operator/class"
         class="cursor-pointer hover:-translate-x-0.25 transition-all"
       >
         <ArrowLeft class="size-6" />
@@ -40,8 +40,8 @@
       </div>
 
       <!-- Kelas detail  -->
-      <div v-if="classData">
-        <div class="rounded-lg bg-white border border-gray-300 p-4 mb-4">
+      <div v-if="classData" class="w-full">
+        <div class="w-full rounded-lg bg-white border border-gray-300 p-4 mb-4">
           <div
             class="flex justify-between items-center border-b border-gray-300 pb-4"
           >
@@ -85,11 +85,11 @@
             </div>
             <div class="flex items-center gap-2">
               <component
-                :is="classData.member_names.length === 1 ? User : Users"
+                :is="classData.members.length === 1 ? User : Users"
                 class="flex-none size-5"
               />
               <label class="text-xs">{{
-                classData.member_names?.join(', ')
+                classData.members.map((item) => item.name).join(', ')
               }}</label>
             </div>
             <div class="flex items-center gap-2">
@@ -110,8 +110,8 @@
             <div class="flex items-center gap-2">
               <Phone class="flex-none size-5 text-gray-500" />
               <label class="text-xs text-gray-500 capitalize">
-                {{ classData.created_by.name }} -
-                {{ classData.created_by.phone }}
+                {{ classData.members[0].name }} -
+                {{ classData.members[0].phone }}
               </label>
             </div>
             <div class="flex items-center gap-2">
@@ -120,7 +120,23 @@
                 {{ formatLocation(classData.location) }}
               </label>
             </div>
+            <div class="flex items-center text-gray-500 gap-2">
+              <Tag class="flex-none size-5" />
+              <label class="text-xs">
+                {{ classData.created_by.name }} -
+                {{ classData.created_by.phone }}
+              </label>
+            </div>
           </div>
+          <div class="border-b border-gray-300 mt-4"></div>
+          <RouterLink
+            v-if="auth.user.role === 'admin'"
+            :to="`/operator/class/${route.params.id}/edit`"
+            :disabled="isLoading"
+            class="block w-full text-sm text-center text-cyan-400 font-medium rounded-lg border border-cyan-400 px-3 py-2 mt-4 cursor-pointer"
+          >
+            Edit Kelas
+          </RouterLink>
         </div>
 
         <!-- assignment  -->
@@ -233,7 +249,11 @@ import {
   Phone,
   Book,
   UserPen,
+  Tag,
 } from 'lucide-vue-next';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 const route = useRoute();
 const classData = ref();

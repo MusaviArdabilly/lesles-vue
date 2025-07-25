@@ -83,11 +83,11 @@
             </div>
             <div class="flex items-center gap-2">
               <component
-                :is="classData.member_names.length === 1 ? User : Users"
+                :is="classData.members.length === 1 ? User : Users"
                 class="flex-none size-5"
               />
               <label class="text-xs">{{
-                classData.member_names?.join(', ')
+                classData.members.map((item) => item.name).join(', ')
               }}</label>
             </div>
             <div class="flex items-center gap-2">
