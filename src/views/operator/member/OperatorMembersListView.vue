@@ -12,7 +12,7 @@
           class="w-full rounded-lg text-sm border border-gray-300 px-3 py-2 transition-colors focus:ring-1 focus:border-cyan-400 focus:ring-cyan-400"
         >
           <option value="guru" selected>Guru</option>
-          <option value="murid" disabled>Murid</option>
+          <option value="murid">Murid</option>
         </select>
       </div>
     </div>
@@ -27,7 +27,7 @@
         <!-- ... same as your original ... -->
       </div>
 
-      <div v-else-if="members.length" class="grid grid-cols-1 gap-4">
+      <div v-else-if="members" class="grid grid-cols-1 gap-4">
         <RouterLink
           :to="`/operator/class/${member.id}`"
           v-for="member in members"
@@ -44,13 +44,29 @@
                 <h1 class="text-sm font-medium">
                   {{ member.name }}
                 </h1>
-                <p class="text-xs text-gray-500">
-                  {{ formatLocation(member.teacher_profile.location) }}
+                <p
+                  :class="[
+                    'text-xs text-gray-500',
+                    member.profile_complete === 1
+                      ? 'text-gray-500'
+                      : 'text-red-500',
+                  ]"
+                >
+                  {{
+                    member.profile_complete === 1
+                      ? filterRole === 'guru'
+                        ? formatLocation(member.teacher_profile?.location)
+                        : member.student_profile?.school_name
+                      : 'Belum Melengkapi Profil'
+                  }}
                 </p>
               </div>
-              <div class="flex items-center gap-2">
+              <div
+                v-if="member.profile_complete === 1 && filterRole === 'guru'"
+                class="flex items-center gap-2"
+              >
                 <BookCheck class="flex-none size-5" />
-                <label class="text-xs">{{
+                <label class="text-xs text-gray-500">{{
                   member.education_levels.map((level) => level.code).join(', ')
                 }}</label>
               </div>
@@ -105,6 +121,7 @@ async function fetchMembers(role) {
     } else {
       members.value = [];
     }
+    console.log(members);
   } catch (error) {
     console.error('Error fetching members:', error);
     members.value = [];
