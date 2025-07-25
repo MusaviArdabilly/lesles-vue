@@ -47,13 +47,13 @@
                 <p
                   :class="[
                     'text-xs text-gray-500',
-                    member.profile_complete === 1
+                    Number(member.profile_complete) === 1
                       ? 'text-gray-500'
                       : 'text-red-500',
                   ]"
                 >
                   {{
-                    member.profile_complete === 1
+                    Number(member.profile_complete) === 1
                       ? filterRole === 'guru'
                         ? formatLocation(member.teacher_profile?.location)
                         : member.student_profile?.school_name
@@ -62,7 +62,9 @@
                 </p>
               </div>
               <div
-                v-if="member.profile_complete === 1 && filterRole === 'guru'"
+                v-if="
+                  Number(member.profile_complete) === 1 && filterRole === 'guru'
+                "
                 class="flex items-center gap-2"
               >
                 <BookCheck class="flex-none size-5" />
