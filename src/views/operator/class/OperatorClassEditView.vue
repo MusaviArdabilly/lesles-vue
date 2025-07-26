@@ -402,7 +402,7 @@ const addMember = async () => {
       return;
     }
 
-    form.members.push(email);
+    form.members = [...form.members, email];
     newMemberEmail.value = '';
   } catch (err) {
     showToast('Gagal memeriksa email.', 'error');
