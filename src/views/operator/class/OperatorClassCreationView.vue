@@ -350,7 +350,7 @@ const addMember = async () => {
       return;
     }
 
-    form.members = [...form.members, email];
+    form.members.push(email);
     newMemberEmail.value = '';
   } catch (err) {
     showToast('Gagal memeriksa email.', 'error');

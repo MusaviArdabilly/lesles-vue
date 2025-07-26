@@ -391,18 +391,20 @@ const addMember = async () => {
   }
 
   try {
-    const res = await userService.checkUserByEmail(email);
-    if (!res.success) {
+    const response = await userService.checkUserByEmail(email);
+    if (!response.success) {
       emailCheckStatus.value = 'Email tidak ditemukan.';
       return;
     }
 
-    if (res.data.user.role !== 'murid') {
+    if (response.data.user.role !== 'murid') {
       emailCheckStatus.value = 'Hanya murid yang bisa ditambahkan ke grup.';
       return;
     }
-
-    form.members = [...form.members, email];
+    console.log('Adding member email:', email);
+    console.log('Before:', form.members);
+    form.members = [...form.members, response.data.user];
+    console.log('After:', form.members);
     newMemberEmail.value = '';
   } catch (err) {
     showToast('Gagal memeriksa email.', 'error');
