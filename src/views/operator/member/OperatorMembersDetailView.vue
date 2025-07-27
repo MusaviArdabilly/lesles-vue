@@ -97,12 +97,15 @@
 
     <div class="w-full rounded-lg bg-white p-4 space-y-2">
       <h1 class="font-medium">Absensi</h1>
-      <ul v-if="attendanceUserData.length > 1" class="space-y-2">
+      <ul v-if="attendanceUserData?.length > 1" class="space-y-2">
         <li v-for="(attendance, index) in attendanceUserData" :key="index">
           <div class="flex items-start justify-between">
-            <span class="text-sm">
-              {{ formatDate(attendance.attended_at) }}
-            </span>
+            <div class="flex-none flex">
+              <span class="text-sm">
+                {{ formatTime(attendance.attended_at) }}
+                {{ formatDate(attendance.attended_at) }}
+              </span>
+            </div>
             <span class="text-sm">
               {{ attendance.class.name }}
             </span>
@@ -163,6 +166,14 @@ function formatDate(dateString) {
     month: 'long',
     year: 'numeric',
   }).format(date);
+}
+
+function formatTime(dateTimeString) {
+  const date = new Date(dateTimeString);
+  return date.toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
 async function loadDetailMemberData() {
