@@ -97,21 +97,29 @@
 
     <div class="w-full rounded-lg bg-white p-4 space-y-2">
       <h1 class="font-medium">Absensi</h1>
-      <ul v-if="attendanceUserData?.length > 1" class="space-y-2">
+      <ul v-if="attendanceUserData" class="space-y-2">
         <li v-for="(attendance, index) in attendanceUserData" :key="index">
           <div class="flex items-start justify-between">
-            <div class="flex-none flex">
+            <div class="flex flex-col">
+              <span class="text-sm text-gray-500">{{
+                formatTime(attendance.attended_at)
+              }}</span>
               <span class="text-sm">
-                {{ formatTime(attendance.attended_at) }}
                 {{ formatDate(attendance.attended_at) }}
               </span>
             </div>
-            <span class="text-sm">
+            <span class="text-sm text-right">
               {{ attendance.class.name }}
             </span>
           </div>
-          <p class="text-sm text-gray-500">
-            <span class="text-black">Note: </span> {{ attendance.note }}
+          <p class="text-sm">
+            Note:
+            <span class="text-gray-500">
+              {{ attendance.note ? attendance.note : '-' }}
+            </span>
+          </p>
+          <p v-if="attendance.reschedule_from" class="text-sm font-medium">
+            Pindah jadwal dari: {{ attendance.reschedule_from }}
           </p>
         </li>
       </ul>
