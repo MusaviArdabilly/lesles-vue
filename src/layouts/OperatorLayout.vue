@@ -46,8 +46,8 @@
           to="/operator/member"
           class="flex flex-1 flex-col items-center"
           :class="{
-            'text-cyan-400': route.path === '/operator/member',
-            'text-gray-700': !route.path === '/operator/member',
+            'text-cyan-400': route.path.startsWith('/operator/member'),
+            'text-gray-700': !route.path.startsWith('/operator/member'),
           }"
         >
           <Users class="size-6 mb-1" />

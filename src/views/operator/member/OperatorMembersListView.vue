@@ -29,7 +29,7 @@
 
       <div v-else-if="members" class="grid grid-cols-1 gap-4">
         <RouterLink
-          :to="`/operator/class/${member.id}`"
+          :to="`/operator/member/${filterRole}/${member.id}`"
           v-for="member in members"
           :key="member.id"
           custom

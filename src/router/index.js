@@ -20,6 +20,7 @@ import OperatorMembersView from '@/views/operator/member/OperatorMembersListView
 import OperatorClassDetailView from '@/views/operator/class/OperatorClassDetailView.vue';
 import OperatorClassCreationView from '@/views/operator/class/OperatorClassCreationView.vue';
 import OperatorClassEditView from '@/views/operator/class/OperatorClassEditView.vue';
+import OperatorMembersDetailView from '@/views/operator/member/OperatorMembersDetailView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -147,6 +148,11 @@ const router = createRouter({
           path: 'member',
           name: 'operator-member',
           component: OperatorMembersView,
+        },
+        {
+          path: 'member/:role/:id',
+          name: 'operator-member-detail',
+          component: OperatorMembersDetailView,
         },
         {
           path: 'account',
