@@ -39,7 +39,8 @@
         <!-- Member Grup (hanya jika tipe grup) -->
         <div class="space-y-1">
           <label class="block text-sm font-medium text-gray-700"
-            >Anggota Grup (Email Siswa)</label
+            >Anggota Kelas
+            <span class="text-sm font-normal">(Email Siswa)</span></label
           >
 
           <div class="flex gap-2">
@@ -119,8 +120,9 @@
         <!-- Alamat Kelas -->
         <div class="space-y-1">
           <label class="block text-sm font-medium text-gray-700"
-            >Lokasi Kelas</label
-          >
+            >Lokasi Kelas
+            <span class="text-sm font-normal">(Kosongi jika online)</span>
+          </label>
 
           <!-- Provinsi -->
           <select
@@ -192,7 +194,12 @@
 
         <!-- Jadwal Kelas -->
         <div class="space-y-1">
-          <label class="block text-sm font-medium text-gray-700">Jadwal</label>
+          <label class="block text-sm font-medium text-gray-700"
+            >Jadwal
+            <span class="text-sm font-normal"
+              >(Bisa lebih dari satu)</span
+            ></label
+          >
 
           <div
             v-for="(schedule, index) in form.schedule"
